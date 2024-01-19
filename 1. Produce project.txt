@@ -1,0 +1,29 @@
+1. 프로젝트 생성
+- Java 11 설치
+- IDE: IntelliJ 또는 Eclipse 설치
+
+** 공부 전 기초 상식
+- Java SE (Java Platform, Standard Edition):	자바의 표준안(자바라는 언어가 어떠한 문법적인 구성을 가졌는지 등을 정의), 명세서, 설계도
+
+- JVM (Java Virtual Machine):		자바를 실행하기 위한 가상 컴퓨터, 
+					OS에 종속받지 않고 CPU가 Java를 인식, 실행할 수 있게하는 가상 컴퓨터
+- JDK (Java Development Kit):		Java를 사용하기 위해 필요한 모든 기능을 갖춘 키트,
+					JDK 는 JRE를 포함하고 있다.
+- JRE (Java Runtime Environment):	JVM + 자바 클래스 라이브러리로 구성
+					컴파일 된 Java 프로그램을 실행하는데 필요한 패키지이다.
+- JIT (Just In Time Compiler):		런타임 시 기본 시스템 코드로 바이트 코드를 컴파일하여 
+					Java™ 애플리케이션의 성능을 향상시키는 런타임 환경의 컴포넌트
+
+* JDK 는 JRE, JVM 모두 포함, JRE 는 JVM 포함, JVM 은 JIT 포함
+
+* references:	https://doozi0316.tistory.com/entry/1%EC%A3%BC%EC%B0%A8-JVM%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EB%A9%B0-%EC%9E%90%EB%B0%94-%EC%BD%94%EB%93%9C%EB%8A%94-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%8B%A4%ED%96%89%ED%95%98%EB%8A%94-%EA%B2%83%EC%9D%B8%EA%B0%80
+
+_________________________________________________________________________________________________________________
+
+* 스트링 프로젝트 생성 -	https://start.spring.io
+* src -	main, test	// test 코드는 중요하다!
+* Gradle -	Groovy를 이용한 빌드 자동화 시스템 (버전 설정, 라이브러리 땡겨오기), 
+		빠른 기간동안 계속해서 늘어나는 라이브러리의 추가와 프로젝트를 진행하며 라이브러리의 버전을 쉽게 동기화 하기 위해 사용
+
+* IntelliJ 의 환경을 JDK 21로 설정해주어야 한다	- https://covenant.tistory.com/276
+* 메인메소드를 실행하고, http://localhost:8080/ 에 들어가면 성공적으로 실행 됐는지 확인 가능
