@@ -27,3 +27,61 @@ ________________________________________________________________________________
 
 * IntelliJ 의 환경을 JDK 21로 설정해주어야 한다	- https://covenant.tistory.com/276
 * 메인메소드를 실행하고, http://localhost:8080/ 에 들어가면 성공적으로 실행 됐는지 확인 가능
+
+* Shift + Ctrl + Alt + S = Project setting
+  Shift + Ctrl + S = Setting
+  Shift + Ctrl + Alt + T = Refactor
+
+_________________________________________________________________________________________________________________
+
+
+2. 라이브러리 살펴보기
+- External Libraries
+* 라이브러리들은 서로 의존관계가 있을 수 있다.
+
+* 스프링 부트 라이브러리
+	- spring-boot-starter-web
+		- spring-boot-starter-tomcat: 톰캣 (웹서버)
+		- spring-webmvc: 스프링 웹 MVC
+	- spring-boot-starter-thymeleaf: 타임리프 템플릿 엔진(View)
+	- spring-boot-starter(공통): 스프링 부트 + 스프링 코어 + 로깅
+		- spring-boot
+			- spring-core
+		- spring-boot-starter-logging
+			- logback, slf4j
+
+* 테스트 라이브러리
+	- spring-boot-starter-test
+		- junit: 테스트 프레임워크
+		- mockito: 목 라이브러리
+		- assertj: 테스트 코드를 좀 더 편하게 작성하게 도와주는 라이브러리
+		- spring-test: 스프링 통합 테스트 지원
+
+_________________________________________________________________________________________________________________
+
+3. View 환경설정
+
+* Welcom page 만들기
+	* static/index.html` 을 올려두면 Welcome page 기능을 제공한다.
+	* src -	main - resources - static - index.html
+	* 말그대로 정적, 파일 그자체를 던져준 것.
+
+* thymeleaf 템플릿 엔진
+	* 이 템플릿 엔진으로 동적인 페이지를 만들 수 있다.
+	1) src - main - java - hell.hellospring - controller (package 만들기) - HelloController (class 만들기)
+		* HelloController 에서 return 값을 hello 로 준다.
+	2) src - resources - templates - hello.html
+	* 컨트롤러에서 리턴 값으로 문자를 반환하면 veiwResolver가 화면을 찾아서 처리한다.
+		- resources:templates/ + {ViewName} + .html
+
+	* spring-boot-devtools 라이브러리 추가하면, 서버 재시작없이 view 파일 변경이 가능
+
+_________________________________________________________________________________________________________________
+
+4. 빌드하고 실행하기
+	* 콘솔 실행 후 C:\Users\Trees\Desktop\Study\Spring\hello-spring>
+	* 들어간 후에 gradlew build
+	* cd build, cd libs 한후에 
+	* java -jar hello-spring-0.0.1-SNAPSHOT.jar
+
+	하면 실행된다.
