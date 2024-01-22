@@ -13,7 +13,7 @@
 
 
 2. MVC와 템플릿 엔진
-	* MVC:	Mode, View, Controller
+	* MVC:	Model, View, Controller
 	* View 는 보이는것에 집중 / Model, Controller 는 내부에 로직관련에 집중
 
 * 타임리프 장점: HTML을 그대로 쓰고 그 파일을 서버 없이 바로 열어봐도 껍데기를 볼 수 있다.
@@ -32,3 +32,26 @@
 		(hello 클래스 안에 private String name 과 Getter, Setter을 넣고 만듦)
 	* 직접 홈페이지를 열어서 소스를 보면, JSON 구조 (key, string) 구조로 나옴
 	* xml 방식은 <html></html> 방식이 너무 무겁기 때문에 JSON 방식 선호
+
+	* @ResponseBody를 사용하면 HTTP의 BODY에 문자 내용을 직접 반환
+	  viewResolver로 가는 것이 아닌, HttpMessageConverter가 동작한다.
+	  (전달하는 데이터가 객체면 String 이 아닌 Json 구조로 보낸다)
+		- 기본 문자처리: StringHttpMessageConverter
+		- 기본 객체처리: MappingJackson2HttpMessageConverter식 선호
+
+
+
+_________________________________________________________________________________________________________________
+*** 간단 정리
+
+1. Static Contents
+	파일 컨텐츠 그 자체를 보낸다. (동적인 것은 불가능)
+
+2. MVC, template Engine
+	브라우저에게 신호를 받았을 때, Controller에서 동적인 장치를 추가해서 넣고 view에게 보낸다. 
+	View에서 템플릿 엔진으로 html을 좀 더 렌더링해서 고객에게 전달한다.
+
+3. API
+	신호를 받은 후에, Controller에서 @ResponseBody를 사용하여 view로 보내지않고 바로 HTTP의 BODY에 문자 내용을 직접 준다.
+	문자가 String 일 경우에는 String으로 바로 주지만, 객체일 경우 JsonConverter를 이용해 객체를 JSON 형식으로 바꾸고 고객에게 전달한다.
+	* 다른 컨버터를 사용하면 xml이나 다른 형식의 파일로도 가능하다.
