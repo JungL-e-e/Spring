@@ -1,0 +1,55 @@
+* 스프링 빈과 의존관계
+
+* 3section 강의 에서 만든 백엔드 로직들을 이제 눈으로 보이게 웹 MVC 나 api를 사용하여 눈에 보이게끔 하고싶다.
+	-> MemberController 을 만들어야함. (MemberService를 통해 상호작용을 해야함 = 의존)
+	* @Controller 어노테이션이 있어야 기능이 수행
+	* MemberService 인스턴스 객체를 생성할 수도 있긴하지만, 이렇게 하는 것보다는 MemberService를 언급하고 생성자를 만든다
+		private final MemberService memberService;
+
+		@Autowired
+    		public MemberController(MemberService memberService) {
+        		this.memberService = memberService;
+    		}
+
+		* 생성자에 `@Autowired` 가 있으면 스프링이 연관된 객체를 스프링 컨테이너에서 찾아서 넣어준다. 이렇게 객체
+		의존관계를 외부에서 넣어주는 것을 DI (Dependency Injection), 의존성 주입이라 한다.
+	
+	* MemberService 에는 @Service, MemoryMemberRepository 에는 @Repository 어노테이션을 붙여야 서로 연결을 해준다.
+
+	*** 클래스끼리 서로 상호작용을 할 때, 필요한 인스턴스(구현체)를 생성하면 그 클래스의 인스턴스에만 의존하게되는데 
+	    인스턴스가 아닌 그 클래스의 인터페이스(추상)를 언급하고, 생성자를 생성하면 어떤 구현체를 사용하더라도 코드 변경없이 사용가능하다. 
+	    이것이 Dependency Injection 이다. 그리고 그 생성자에 @Autowired 를 하면 빈 생성시 알아서 연결해서 사용하게 해준다.
+
+references:	https://velog.io/@roro/DI-Dependency-Injection-%EC%82%AC%EC%9A%A9%EC%9D%B4%EC%9C%A0
+		https://maivve.tistory.com/184
+_________________________________________________________________________________________________________________
+* 스프링 빈을 등록하는 2가지 방법
+	
+	1. 컴포넌트 스캔과 자동 의존관계 설정
+		@Service, @Reposirtory, @Controller 전부 @Component가 포함되어있다
+		컴포넌트 스캔으로 스프링 컨테이너에 등록하고 @Autowired로 연결함
+	* 기본적으로 hello.hellospring 패키지를 포함해서 이 하위들은 자동적으로 스캔하여 spring bean 으로 등록한다. 하지만 나머지는 안된다.
+	** 되는 방법도 있긴함.. 
+
+	2. 자바 코드로 직접 스프링 빈 등록하기
+		Application 파일 있는 위치에 springConfig 클래스 생성 -> @Configuration 어노테이션 클래스에 붙이기
+		-> @Bean 어노테이션 붙이고 연결하고싶은 클래스들 언급하기  = 이러면 컨테이너에 등록이 된 것
+			ex)	@Bean
+    				public MemberService memberService() {
+        				return new MemberService(memberRepository());
+    				}
+* 서로 장, 단점이 있다.
+	
+		
+
+_________________________________________________________________________________________________________________
+
+* 스프링은 스프링 컨테이너에 스프링 빈을 등록할 때, 기본으로 싱글톤으로 등록한다(유일하게 하나만 등록해서 공유한다) 따라서 같은 스프링 빈이면 모두 같		은 인스턴스다. 설정으로 싱글톤이 아니게 설정할 수 있지만, 특별한 경우를 제외하면 대부분 싱글톤을 사용한다.
+
+* DI에는 필드 주입, setter 주입, 생성자 주입 이렇게 3가지 방법이 있다. 의존관계가 실행중에 동적으로 변하는 경우는 거의 없으므로 생성자 주입을 권장한다.
+
+* 실무에서는 주로 정형화된 컨트롤러, 서비스, 리포지토리 같은 코드는 컴포넌트 스캔을 사용한다. 그리고 정형화 되지 않거나, 
+  상황에 따라 구현 클래스를 변경해야 하면 설정을 통해 스프링 빈으로 등록한다.
+	ex) 예를 들면 레포지토리를 MemoryMemberRepository 에서 진짜 DBMemberRepository 로 바꿀때는 자바 코드로 직접 스프링 빈 등록한 것	    에서 리턴 값만 바꿔주면 간단하게 바꿀 수 있다.
+
+
