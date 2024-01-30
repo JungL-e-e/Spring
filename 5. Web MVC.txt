@@ -1,0 +1,88 @@
+* 웹 MVC 개발
+
+	* @GetMapping("/") = localhost:8080 으로 바로 호출
+
+1. 홈화면 만들기
+
+ex)	@Controller
+	public class HomeController {
+
+    		@GetMapping("/")
+    		public String home() {
+        		return "home";
+    		}
+	}
+
+* static 파일에 아무것도 없을 시에는 index 파일을 뜨게 하기로 했지만, 웹 MVC 는 로컬호스트에서 신호를 받으면 먼저 관련 컨트롤러가 있는지 
+  찾아보기 때문에, 이 HomeController 를 참색하여 home으로 리턴해준다.
+
+_________________________________________________________________________________________________________________
+2. 회원 웹기능 등록
+
+* html
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <form action="/members/new" method="post">   //	 입력값을 받으면 /members/new 에 post 방식으로 전달함
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" placeholder="이름을 입력하세요">	// id 와 name 이 저장됨
+        </div>
+        <button type="submit">등록</button>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>
+
+
+* MemberController
+    @PostMapping("/members/new")
+    public String create(MemberForm form) {		// name 값이 이 memberform 에 들어오게됨.
+        Member member = new Member();
+        member.setName(form.getName());			// memberform 안에 name 값이 member 객체로 들어감
+
+        memberService.join(member);
+
+        return "redirect:/";				// 동작이 완료되면 다시 돌아감
+    }
+
+_________________________________________________________________________________________________________________
+3. 회원 웹기능 조회
+
+* html
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">		// thtmeleaf 문법 - 반복문
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.name}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>
+
+* Controller
+    @GetMapping("/members")
+    public String list(Model model) {
+        List<Member> members = memberService.findMember();
+        model.addAttribute("members", members);
+        return "members/memberList";
+    }
+
+* 이렇게했을때 자바를 재실행 하면 데이터가 다 날라간다. 그렇기 때문에 DB에 모두 저장해야될 필요가 있다.
+
+
