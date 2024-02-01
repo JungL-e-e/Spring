@@ -68,3 +68,63 @@ private void close(Connection conn) throws SQLException {
 	* 스프링의 DI (Dependencies Injection)을 사용하면 기존 코드를 전혀 손대지 않고, 설정만으로 구현 클래스를변경할 수 있다.
 	* 회원을 등록하고 DB에 결과가 잘 입력되는지 확인하자.
 	* 데이터를 DB에 저장하므로 스프링 서버를 다시 실행해도 데이터가 안전하게 저장된다.
+
+_________________________________________________________________________________________________________________
+
+* 스프링 통합 테스트
+
+1. @SpringBootTest	- 스프링 컨테이너와 테스트를 함께 실행한다.
+2. @Transactional	- 테스트 케이스에 이 애노테이션이 있으면, 테스트 시작 전에 트랜잭션을 시작하고, 테스트완료 후에 항상 롤백한다. 이렇게 하면 			  DB에 데이터가 남지 않으므로 다음 테스트에 영향을 주지 않는다.	
+
+* 순수한 단위 테스트가 보통 컨테이너와 함께 실행하는 테스트보다 좋을 경우가 많다. 고로 단위 테스트를 연습하자
+_________________________________________________________________________________________________________________
+
+* Jdbc 템플릿
+	스프링 JdbcTemplate과 MyBatis 같은 라이브러리는 JDBC API에서 본 반복 코드를 대부분 제거해준다.
+	* SQL은 직접 작성해야 한다.
+
+ex)	@Override
+    public Member save(Member member) {
+        String sql = "insert into member(name) values(?)";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;            // 결과를 받음
+        try {
+            conn = getConnection();     // connection 가져오기
+            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);    // 공부 필요
+            pstmt.setString(1, member.getName());
+            pstmt.executeUpdate();      // DB에 실제 쿼리가 날라감
+            rs = pstmt.getGeneratedKeys();      // 저장했던 쿼리의 키를 꺼내줌
+            if (rs.next()) {                    // 값이 있으면
+                member.setId(rs.getLong(1));    // 값을 꺼내옴
+            } else {
+                throw new SQLException("id 조회 실패");
+            }
+            return member;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+ 이렇게 긴 코드가 이렇게 간결해진다.
+	@Override
+    public Member save(Member member) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("member").usingGeneratedKeyColumns("id");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", member.getName());
+
+        Number key = jdbcInsert.executeAndReturnKey(new
+                MapSqlParameterSource(parameters));
+        member.setId(key.longValue());
+        return member;
+    }
+_________________________________________________________________________________________________________________
+
+* JPA
+	JPA는 기존의 반복 코드는 물론이고, 기본적인 SQL도 JPA가 직접 만들어서 실행해준다.
+	JPA를 사용하면, SQL과 데이터 중심의 설계에서 객체 중심의 설계로 패러다임을 전환을 할 수 있다.
+	JPA를 사용하면 개발 생산성을 크게 높일 수 있다.
