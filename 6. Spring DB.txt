@@ -129,6 +129,39 @@ ________________________________________________________________________________
 	JPA를 사용하면, SQL과 데이터 중심의 설계에서 객체 중심의 설계로 패러다임을 전환을 할 수 있다.
 	JPA를 사용하면 개발 생산성을 크게 높일 수 있다.
 
+
 1. build.gradle	-> implementation 'org.springframework.boot:spring-boot-starter-data-jpa' 라이브러리 추가
-2. resources	-> properties	-> spring.jap.show-sql=true
-				   spring.jpa.hibernate.ddl-auto=none 추가
+	* data-jpa 라이브러리는 Jdbc 라이브러리 포함이므로 Jdbc 라이브러리 제거 가능
+2. resources	-> properties	-> spring.jap.show-sql=true			// JPA  가 생성하는 SQL 출력
+				   spring.jpa.hibernate.ddl-auto=none 추가	// 테이블 자동생성 기능 끄기
+3. JPA entitu mapping-> domain	-> Member 에 @Entity 어노테이션
+				   id 에 @Id, @GeneratedValue(strategy = GenerationType.IDENTITY)
+					* DB가 알아서 생성해주는 것을 identity 라 한다.
+4. JpaMemberRepository 생성	-> EntityManager 가 있어야 JPA 생성가능
+
+				ex) 	private final EntityManager em;
+    					public JpaMemberRepository(EntityManager em) {
+       						this.em = em;
+    					}
+
+5. Method 작성
+
+6. 서비스 계층에 @Transaction 추가
+
+_________________________________________________________________________________________________________________
+
+* 스프링 데이터 JPA
+	JPA 만으로도 편리하지만, 스프링 데이터 JPA를 사용하면 리포지토리에 구현 클래스 없이 인터페이스 만으로 개발을 완료할 수 있다.
+	* 주의: 스프링 데이터 JPA는 JPA를 편리하게 사용하도록 도와주는 기술입니다. 따라서 JPA를 먼저 학습한 후에
+		스프링 데이터 JPA를 학습해야 합니다.
+
+1. 스프링 데이터 JPA 회원 리포지토리(인터페이스 생성)
+
+2. 스프링 데이터 JPA 회원 리포지토리를 사용하도록 스프링 설정 변경(springConfig)
+
+* 스프링 데이터 JPA 제공 기능
+	- 인터페이스를 통한 기본적인 CRUD
+	- `findByName()` , `findByEmail()` 처럼 메서드 이름 만으로 조회 기능 제공
+	- 페이징 기능 자동 제공
+
+* JPA 공부 이후 추가 공부 필요
