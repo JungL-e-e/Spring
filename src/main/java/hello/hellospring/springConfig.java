@@ -1,35 +1,44 @@
 package hello.hellospring;
 
-import hello.hellospring.repository.JdbcMemberRepository;
-import hello.hellospring.repository.JdbcTemplateMemberRepository;
-import hello.hellospring.repository.MemberRepository;
-import hello.hellospring.repository.MemoryMemberRepository;
+import hello.hellospring.repository.*;
 import hello.hellospring.service.MemberService;
+//  import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.sql.DataSource;
-
 @Configuration
 public class springConfig {
-
-    private DataSource dataSource;
-
-    @Autowired
-    public springConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
+    private final MemberRepository memberRepository;
+    public springConfig(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
+
+
+//    private EntityManager em;                         JPA
+//
+//    @Autowired
+//    public springConfig(EntityManager em) {
+//        this.em = em;
+//    }
+
+//    private DataSource dataSource;
+
+//    @Autowired
+//   public springConfig(DataSource dataSource) {
+//       this.dataSource = dataSource;
+//   }
 
     @Bean
     public MemberService memberService() {
-        return new MemberService(memberRepository());
+        return new MemberService(memberRepository);
     }
 
-    @Bean
-    public MemberRepository memberRepository() {
-//        return new MemoryMemberRepository();
-//        return new JdbcMemberRepository(dataSource);
-        return new JdbcTemplateMemberRepository(dataSource);
-    }
+//    @Bean
+//    public MemberRepository memberRepository() {
+////        return new MemoryMemberRepository();
+////        return new JdbcMemberRepository(dataSource);              // JDBC
+////        return new JdbcTemplateMemberRepository(dataSource);      // JDBC Template
+////        return new JpaMemberRepository(em);                       // JPA
+//    }
 }
