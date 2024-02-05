@@ -1,0 +1,50 @@
+* AOP (Aspect Oriented Programming)
+	모든 메소드의 호출 시간을 측정하고 싶다면?
+	공통 관심 사항(cross-cutting concern) vs 핵심 관심 사항(core concern)
+	회원 가입 시간, 회원 조회 시간을 측정하고 싶다면?\
+
+ex)	메소드 시작할때,
+	long start = System.currentTimeMillis();
+	메소드 끝날때,
+	long finish = System.currentTimeMillis();
+	long timeMs = finish - start;
+	System.out.println("join " + timeMs + "ms");
+
+	* 메소드 try, finally 문 작성
+
+* 위의 문제점
+	- 회원가입, 회원 조회에 시간을 측정하는 기능은 핵심 관심 사항이 아니다.
+	- 시간을 측정하는 로직은 공통적으로 다같이 사용하고싶다.
+	- 시간을 측정하는 로직과 핵심 비즈니스의 로직이 섞여서 유지보수가 어렵다.
+	- 시간을 측정하는 로직을 별도의 공통 로직으로 만들기 매우 어렵다.
+	- 시간을 측정하는 로직을 변경할 때 모든 로직을 찾아가면서 변경해야 한다.
+* 결론은 매우 불편. 이것을 해결하기위해 AOP 개발
+
+
+1. Aop package, Aop 클래스 생성
+2. Aop 클래스에 @Aspect 어노테이션 생성
+3. 메소드 생성 
+ex)	public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
+        	long start = System.currentTimeMillis();
+        	System.out.println("Start: " + joinPoint.toString());
+        	try {
+        	    return joinPoint.proceed();
+        	} finally {
+        	    long finish = System.currentTimeMillis();
+        	    long timeMs = finish = start;
+        	    System.out.println("End: " + joinPoint.toString() + " " + timeMs + "ms");
+        	}
+    	}
+
+4. springConfig 에 Bean 등록 또는 Component 스캔 사용 (@Component 어노테이션)
+ex)	@Bean
+    	public TimeTraceAop timeTraceAop() {
+        	return new TimeTraceAop();
+    	}
+
+5. 메소드에 @Around("execution(* hello.hellospring..*(..))") 어노테이션 적용
+	* execution 안에는 주소값
+
+* 프록시 라는 기술을 이용하여 AOP 를 적용시킨 것
+	추가 공부 필요
+
